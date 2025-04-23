@@ -110,17 +110,22 @@ def fetch_emails():
                         # If the email has a body
                         if msg.is_multipart():
                             for part in msg.walk():
+                                content_type = part.get_content_type()
+                                print(content_type)
                                 # If the content type is text/plain
-                                if part.get_content_type() == "text/plain":
+                                if content_type == "text/plain":
                                     body = part.get_payload(decode=True).decode()
                                     # Relevanten Teil des Bodys extrahieren
                                     relevant_body = extract_relevant_body(body)
-                                # Wenn es ein Anhang ist
-                                if part.get("Content-Disposition") and "attachment" in part.get("Content-Disposition"):
+                                # Wenn es ein Anhang oder unterstützter Content-Type ist
+                                elif part.get("Content-Disposition") or content_type.startswith("image/") or content_type in ["application/pdf"]:
                                     filename = part.get_filename()
-                                    if filename:
-                                        attachment_data = part.get_payload(decode=True)
-                                        attachments[filename] = attachment_data
+                                    if not filename:
+                                        # Generiere einen Standard-Dateinamen, falls keiner vorhanden ist
+                                        extension = content_type.split("/")[-1]
+                                        filename = f"attachment.{extension}"
+                                    attachment_data = part.get_payload(decode=True)
+                                    attachments[filename] = attachment_data
                         else:
                             # If the email is not multipart
                             body = msg.get_payload(decode=True).decode()
