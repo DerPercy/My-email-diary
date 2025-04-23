@@ -2,6 +2,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import configparser
+from datetime import datetime  # Import für das aktuelle Datum
 
 def send_email(sender_email, sender_password, recipient_email, subject, body, smtp_server, smtp_port):
     try:
@@ -33,7 +34,10 @@ if __name__ == "__main__":
     smtp_port = int(config['smtp']['smtp_port'])
 
     recipient_email = config['email']['recipient_email']
-    subject = config['email']['subject']
     body = config['email']['body']
+
+    # Dynamischer Betreff mit aktuellem Datum
+    current_date = datetime.now().strftime("%d.%m.%Y")
+    subject = f"Wie gehts dir heute am {current_date}?"
 
     send_email(sender_email, sender_password, recipient_email, subject, body, smtp_server, smtp_port)

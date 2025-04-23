@@ -8,3 +8,9 @@ Activate:
 ´´´
 . venv/bin/activate
 ´´´
+
+## Makefile
+````bash
+make run
+````
+=> Sendet die Mail
