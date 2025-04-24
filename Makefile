@@ -13,8 +13,11 @@ install: $(VENV_DIR)/bin/activate
 	@if [ -f requirements.txt ]; then $(PYTHON) -m pip install -r requirements.txt; fi
 
 # Ziel: Starte das Skript
-run: install
+send: install
 	$(PYTHON) $(SCRIPT)
+
+fetch: install
+	$(PYTHON) fetch_mail.py
 
 # Ziel: Bereinige das virtuelle Environment
 clean:
